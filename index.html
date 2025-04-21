@@ -14,29 +14,45 @@
       <div>
         <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
         <input type="text" id="nombre" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <p class="text-red-500 text-sm mt-1 hidden" id="errorNombre">El nombre es obligatorio.</p>
       </div>
 
       <div>
         <label for="correo" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
         <input type="email" id="correo" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <p class="text-red-500 text-sm mt-1 hidden" id="errorCorreo">Introduce un correo válido.</p>
       </div>
 
       <div>
         <label for="mensaje" class="block text-sm font-medium text-gray-700">Mensaje</label>
         <textarea id="mensaje" rows="4" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        <p class="text-red-500 text-sm mt-1 hidden" id="errorMensaje">El mensaje no puede estar vacío.</p>
       </div>
 
-      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+      <button type="submit" id="botonEnviar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
         Enviar
       </button>
 
-      <p id="mensajeExito" class="text-green-600 text-center mt-4 hidden">¡Mensaje enviado con éxito!</p>
+      <div id="mensajeExito" class="text-green-600 text-center mt-4 hidden">¡Mensaje enviado con éxito!</div>
+      <div id="spinner" class="text-center text-blue-600 hidden">Enviando...</div>
     </form>
   </div>
 
   <script>
     const formulario = document.getElementById('formularioContacto');
+    const botonEnviar = document.getElementById('botonEnviar');
     const mensajeExito = document.getElementById('mensajeExito');
+    const spinner = document.getElementById('spinner');
+
+    // Mensajes de error
+    const errorNombre = document.getElementById('errorNombre');
+    const errorCorreo = document.getElementById('errorCorreo');
+    const errorMensaje = document.getElementById('errorMensaje');
+
+    function validarEmail(correo) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(correo);
+    }
 
     formulario.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -45,20 +61,49 @@
       const correo = document.getElementById('correo').value.trim();
       const mensaje = document.getElementById('mensaje').value.trim();
 
-      if (!nombre || !correo || !mensaje) {
-        alert("Por favor, completa todos los campos.");
-        return;
+      let valido = true;
+
+      // Validaciones
+      if (!nombre) {
+        errorNombre.classList.remove('hidden');
+        valido = false;
+      } else {
+        errorNombre.classList.add('hidden');
       }
+
+      if (!validarEmail(correo)) {
+        errorCorreo.classList.remove('hidden');
+        valido = false;
+      } else {
+        errorCorreo.classList.add('hidden');
+      }
+
+      if (!mensaje) {
+        errorMensaje.classList.remove('hidden');
+        valido = false;
+      } else {
+        errorMensaje.classList.add('hidden');
+      }
+
+      if (!valido) return;
+
+      // Mostrar spinner y deshabilitar botón
+      spinner.classList.remove('hidden');
+      botonEnviar.disabled = true;
+      botonEnviar.classList.add('opacity-50', 'cursor-not-allowed');
 
       // Simulación de envío
       setTimeout(() => {
+        spinner.classList.add('hidden');
         mensajeExito.classList.remove('hidden');
         formulario.reset();
+        botonEnviar.disabled = false;
+        botonEnviar.classList.remove('opacity-50', 'cursor-not-allowed');
 
         setTimeout(() => {
           mensajeExito.classList.add('hidden');
         }, 3000);
-      }, 500);
+      }, 2000);
     });
   </script>
 </body>
