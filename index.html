@@ -2,101 +2,35 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Formulario de Contacto</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f7f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .contact-form {
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
-    }
-
-    .contact-form h2 {
-      margin-bottom: 20px;
-      color: #333;
-      text-align: center;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #555;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      resize: none;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: #007BFF;
-    }
-
-    .btn {
-      background: #007BFF;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
-      width: 100%;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      background: #0056b3;
-    }
-
-    .success-message {
-      color: green;
-      margin-top: 15px;
-      text-align: center;
-      display: none;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="contact-form">
-    <h2>Contacto</h2>
-    <form id="formularioContacto">
-      <div class="form-group">
-        <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" required />
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Contáctanos</h2>
+    <form id="formularioContacto" class="space-y-4">
+      <div>
+        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+        <input type="text" id="nombre" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </div>
-      <div class="form-group">
-        <label for="correo">Correo electrónico</label>
-        <input type="email" id="correo" required />
+
+      <div>
+        <label for="correo" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+        <input type="email" id="correo" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </div>
-      <div class="form-group">
-        <label for="mensaje">Mensaje</label>
-        <textarea id="mensaje" rows="5" required></textarea>
+
+      <div>
+        <label for="mensaje" class="block text-sm font-medium text-gray-700">Mensaje</label>
+        <textarea id="mensaje" rows="4" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
       </div>
-      <button type="submit" class="btn">Enviar</button>
-      <div class="success-message" id="mensajeExito">¡Mensaje enviado con éxito!</div>
+
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+        Enviar
+      </button>
+
+      <p id="mensajeExito" class="text-green-600 text-center mt-4 hidden">¡Mensaje enviado con éxito!</p>
     </form>
   </div>
 
@@ -107,7 +41,6 @@
     formulario.addEventListener('submit', function(e) {
       e.preventDefault();
 
-      // Validación simple
       const nombre = document.getElementById('nombre').value.trim();
       const correo = document.getElementById('correo').value.trim();
       const mensaje = document.getElementById('mensaje').value.trim();
@@ -119,11 +52,11 @@
 
       // Simulación de envío
       setTimeout(() => {
-        mensajeExito.style.display = 'block';
+        mensajeExito.classList.remove('hidden');
         formulario.reset();
 
         setTimeout(() => {
-          mensajeExito.style.display = 'none';
+          mensajeExito.classList.add('hidden');
         }, 3000);
       }, 500);
     });
