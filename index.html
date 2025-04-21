@@ -3,91 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Formulario de Contacto</title>
+  <title>Formulario Avanzado</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
 
-  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
     <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Contáctanos</h2>
-    <form id="formularioContacto" class="space-y-4">
+    <form id="formularioContacto" autocomplete="off" class="space-y-5">
       <div>
         <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-        <input type="text" id="nombre" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <input type="text" id="nombre" required
+          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
         <p class="text-red-500 text-sm mt-1 hidden" id="errorNombre">El nombre es obligatorio.</p>
       </div>
 
       <div>
         <label for="correo" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-        <input type="email" id="correo" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <p class="text-red-500 text-sm mt-1 hidden" id="errorCorreo">Introduce un correo válido.</p>
+        <input type="email" id="correo" required
+          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+        <p class="text-red-500 text-sm mt-1 hidden" id="errorCorreo">Correo no válido.</p>
       </div>
 
       <div>
         <label for="mensaje" class="block text-sm font-medium text-gray-700">Mensaje</label>
-        <textarea id="mensaje" rows="4" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-        <p class="text-red-500 text-sm mt-1 hidden" id="errorMensaje">El mensaje no puede estar vacío.</p>
+        <textarea id="mensaje" rows="4" maxlength="300" required
+          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"></textarea>
+        <div class="flex justify-between items-center mt-1">
+          <p class="text-red-500 text-sm hidden" id="errorMensaje">Este campo no puede estar vacío.</p>
+          <span id="contador" class="text-gray-500 text-sm">0/300</span>
+        </div>
       </div>
 
-      <button type="submit" id="botonEnviar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+      <button type="submit" id="botonEnviar"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
         Enviar
       </button>
 
+      <div id="spinner" class="text-center hidden mt-4">
+        <svg class="animate-spin h-5 w-5 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8v8H4z">
+          </path>
+        </svg>
+        <p class="text-sm text-blue-600 mt-1">Enviando...</p>
+      </div>
+
       <div id="mensajeExito" class="text-green-600 text-center mt-4 hidden">¡Mensaje enviado con éxito!</div>
-      <div id="spinner" class="text-center text-blue-600 hidden">Enviando...</div>
     </form>
   </div>
 
   <script>
     const formulario = document.getElementById('formularioContacto');
     const botonEnviar = document.getElementById('botonEnviar');
-    const mensajeExito = document.getElementById('mensajeExito');
     const spinner = document.getElementById('spinner');
+    const mensajeExito = document.getElementById('mensajeExito');
 
-    // Mensajes de error
+    const nombre = document.getElementById('nombre');
+    const correo = document.getElementById('correo');
+    const mensaje = document.getElementById('mensaje');
+
     const errorNombre = document.getElementById('errorNombre');
     const errorCorreo = document.getElementById('errorCorreo');
     const errorMensaje = document.getElementById('errorMensaje');
+    const contador = document.getElementById('contador');
 
-    function validarEmail(correo) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(correo);
-    }
+    const validarEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    formulario.addEventListener('submit', function(e) {
+    const mostrarError = (input, error, mensaje) => {
+      error.textContent = mensaje;
+      error.classList.remove('hidden');
+      input.classList.remove('border-gray-300');
+      input.classList.add('border-red-500');
+    };
+
+    const limpiarError = (input, error) => {
+      error.classList.add('hidden');
+      input.classList.remove('border-red-500');
+      input.classList.add('border-gray-300');
+    };
+
+    // Validación en tiempo real
+    nombre.addEventListener('input', () => {
+      if (nombre.value.trim()) limpiarError(nombre, errorNombre);
+    });
+
+    correo.addEventListener('input', () => {
+      if (validarEmail(correo.value.trim())) limpiarError(correo, errorCorreo);
+    });
+
+    mensaje.addEventListener('input', () => {
+      contador.textContent = `${mensaje.value.length}/300`;
+      if (mensaje.value.trim()) limpiarError(mensaje, errorMensaje);
+    });
+
+    formulario.addEventListener('submit', function (e) {
       e.preventDefault();
-
-      const nombre = document.getElementById('nombre').value.trim();
-      const correo = document.getElementById('correo').value.trim();
-      const mensaje = document.getElementById('mensaje').value.trim();
 
       let valido = true;
 
-      // Validaciones
-      if (!nombre) {
-        errorNombre.classList.remove('hidden');
+      if (!nombre.value.trim()) {
+        mostrarError(nombre, errorNombre, "El nombre es obligatorio.");
         valido = false;
-      } else {
-        errorNombre.classList.add('hidden');
       }
 
-      if (!validarEmail(correo)) {
-        errorCorreo.classList.remove('hidden');
+      if (!validarEmail(correo.value.trim())) {
+        mostrarError(correo, errorCorreo, "Correo no válido.");
         valido = false;
-      } else {
-        errorCorreo.classList.add('hidden');
       }
 
-      if (!mensaje) {
-        errorMensaje.classList.remove('hidden');
+      if (!mensaje.value.trim()) {
+        mostrarError(mensaje, errorMensaje, "Este campo no puede estar vacío.");
         valido = false;
-      } else {
-        errorMensaje.classList.add('hidden');
       }
 
       if (!valido) return;
 
-      // Mostrar spinner y deshabilitar botón
+      // Confirmación antes de enviar
+      if (!confirm("¿Estás seguro de que quieres enviar el mensaje?")) return;
+
       spinner.classList.remove('hidden');
       botonEnviar.disabled = true;
       botonEnviar.classList.add('opacity-50', 'cursor-not-allowed');
@@ -97,6 +133,8 @@
         spinner.classList.add('hidden');
         mensajeExito.classList.remove('hidden');
         formulario.reset();
+        contador.textContent = '0/300';
+
         botonEnviar.disabled = false;
         botonEnviar.classList.remove('opacity-50', 'cursor-not-allowed');
 
