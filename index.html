@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulario de Contacto</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f7f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .contact-form {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .contact-form h2 {
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #007BFF;
+    }
+
+    .btn {
+      background: #007BFF;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+    }
+
+    .success-message {
+      color: green;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="contact-form">
+    <h2>Contacto</h2>
+    <form id="formularioContacto">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" required />
+      </div>
+      <div class="form-group">
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" required />
+      </div>
+      <div class="form-group">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" rows="5" required></textarea>
+      </div>
+      <button type="submit" class="btn">Enviar</button>
+      <div class="success-message" id="mensajeExito">¡Mensaje enviado con éxito!</div>
+    </form>
+  </div>
+
+  <script>
+    const formulario = document.getElementById('formularioContacto');
+    const mensajeExito = document.getElementById('mensajeExito');
+
+    formulario.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Validación simple
+      const nombre = document.getElementById('nombre').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const mensaje = document.getElementById('mensaje').value.trim();
+
+      if (!nombre || !correo || !mensaje) {
+        alert("Por favor, completa todos los campos.");
+        return;
+      }
+
+      // Simulación de envío
+      setTimeout(() => {
+        mensajeExito.style.display = 'block';
+        formulario.reset();
+
+        setTimeout(() => {
+          mensajeExito.style.display = 'none';
+        }, 3000);
+      }, 500);
+    });
+  </script>
+</body>
+</html>
